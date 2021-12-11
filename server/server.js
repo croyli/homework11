@@ -77,6 +77,19 @@ server.get('/api/v1/users', async (req, res) => {
 })
 // 1 zadanie na get zapros
 
+server.delete('/api/v1/users/:userId', async (req, res) => {
+  const response = await readFile(usersPath, 'utf-8')
+    .then(async (str) => {
+      const parsedString = JSON.parse(str)
+      const filteredUsers = parsedString.filter((user) => {
+        return +req.params.userId !== user.id
+      })
+      await writeNewFile(filteredUsers)
+      return { status: 'success', id: +req.params.userId }
+    })
+  res.json(response)
+})
+
 // 2 zadanie na delete faila
 server.delete('/api/v1/users', (req, res) => {
   unlink(usersPath)
@@ -148,18 +161,7 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
 })
 // 5 zadanie na patch usera
 
-server.delete('/api/v1/users/:userId', async (req, res) => {
-  const response = await readFile(usersPath, 'utf-8')
-    .then(async (str) => {
-      const parsedString = JSON.parse(str)
-      const filteredUsers = parsedString.filter((user) => {
-        return +req.params.userId !== user.id
-      })
-      await writeNewFile(filteredUsers)
-      return { status: 'success', id: +req.params.userId }
-    })
-  res.json(response)
-})
+
 
 server.use('/api/', (req, res) => {
   res.status(404)
