@@ -125,14 +125,15 @@ server.post('/api/v1/users', async (req, res) => {
 //   res.json(response)
 // })
 
-server.delete('/api/v1/users/:userId', async (req, res) => {
-  function write(fileName, obj) {
+function write(fileName, obj) {
   return writeFile(fileName, JSON.stringify(obj), { encoding: 'utf-8' })
   }
   async function read(fileName) {
     const data = await readFile(fileName, { encoding: 'utf-8' })
     return data
   }
+
+server.delete('/api/v1/users/:userId', async (req, res) => {
   const { userId } = req.params 
   const data = JSON.parse(await read(usersPath))
   write(usersPath, [...data.filter(it => it.id !== +userId)])
