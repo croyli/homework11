@@ -109,18 +109,18 @@ server.post('/api/v1/users', async (req, res) => {
 // 3 zadanie na post
 
 // 4 zadanie na delete usera
-server.delete('/api/v1/users/:userId', async (req, res) => {
-  const response = await readFile(usersPath, 'utf-8')
-    .then(async (str) => {
-      const parsedString = JSON.parse(str)
-      const filteredUsers = parsedString.filter((user) => {
-        return +req.params.userId !== user.id
-      })
-      await writeNewFile(filteredUsers)
-      return { status: 'success', id: +req.params.userId }
-    })
-  res.json(response)
-})
+// server.delete('/api/v1/users/:userId', async (req, res) => {
+//   const response = await readFile(usersPath, 'utf-8')
+//     .then(async (str) => {
+//       const parsedString = JSON.parse(str)
+//       const filteredUsers = parsedString.filter((user) => {
+//         return +req.params.userId !== user.id
+//       })
+//       await writeNewFile(filteredUsers)
+//       return { status: 'success', id: +req.params.userId }
+//     })
+//   res.json(response)
+// })
 
 // function write(fileName, obj) {
 //   return writeFile(fileName, JSON.stringify(obj), { encoding: 'utf-8' })
