@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser'
 import config from './config'
 import Html from '../client/html'
 
-const { readFile, writeFile, unlink } = require("fs").promises 
+const { readFile, writeFile, unlink } = require('fs').promises
 
 require('colors')
 
@@ -23,7 +23,7 @@ require('colors')
 
 let connections = []
 
-const port = process.env.PORT || 2130
+const port = process.env.PORT || 2131
 const server = express()
 
 const setHeaders = (req, res, next) => {
@@ -109,36 +109,36 @@ server.post('/api/v1/users', async (req, res) => {
 // 3 zadanie na post
 
 // 4 zadanie na delete usera
-// server.delete('/api/v1/users/:userId', async (req, res) => {
-//   const response = await readFile(usersPath, 'utf-8')
-//     .then(async (str) => {
-//       const parsedString = JSON.parse(str)
-//       const filteredUsers = parsedString.filter((user) => {
-//         return +req.params.userId !== user.id
-//       })
-//       await writeNewFile(filteredUsers)
-//       return { status: 'success', id: +req.params.userId }
-//     })
-//     .catch(() => {
-//       return { status: 'No file', id: +req.params.userId }
-//     })
-//   res.json(response)
-// })
-
-function write(fileName, obj) {
-  return writeFile(fileName, JSON.stringify(obj), { encoding: 'utf-8' })
-  }
-  async function read(fileName) {
-    const data = await readFile(fileName, { encoding: 'utf-8' })
-    return data
-  }
-
 server.delete('/api/v1/users/:userId', async (req, res) => {
-  const { userId } = req.params 
-  const data = JSON.parse(await read(usersPath))
-  write(usersPath, [...data.filter(it => it.id !== +userId)])
-  res.json({ status: 'success', id: +userId })
+  const response = await readFile(usersPath, 'utf-8')
+    .then(async (str) => {
+      const parsedString = JSON.parse(str)
+      const filteredUsers = parsedString.filter((user) => {
+        return +req.params.userId !== user.id
+      })
+      await writeNewFile(filteredUsers)
+      return { status: 'success', id: +req.params.userId }
+    })
+    .catch(() => {
+      return { status: 'No file', id: +req.params.userId }
+    })
+  res.json(response)
 })
+
+// function write(fileName, obj) {
+//   return writeFile(fileName, JSON.stringify(obj), { encoding: 'utf-8' })
+// }
+// async function read(fileName) {
+//   const data = await readFile(fileName, { encoding: 'utf-8' })
+//   return data
+// }
+
+// server.delete('/api/v1/users/:userId', async (req, res) => {
+//   const { userId } = req.params
+//   const data = JSON.parse(await read(usersPath))
+//   write(usersPath, [...data.filter((it) => it.id !== +userId)])
+//   res.json({ status: 'success', id: +userId })
+// })
 // 4 zadanie na delete usera
 
 // 5 zadanie na patch usera
@@ -153,7 +153,7 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
       })
       await writeNewFile(mapUsers)
       return { status: 'success', id: +userId }
-      })
+    })
     .catch((err) => {
       console.log(err)
       return { status: 'No file exist', id: +userId }
