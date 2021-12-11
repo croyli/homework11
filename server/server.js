@@ -23,7 +23,7 @@ require('colors')
 
 let connections = []
 
-const port = process.env.PORT || 2132
+const port = process.env.PORT || 2133
 const server = express()
 
 const setHeaders = (req, res, next) => {
@@ -75,35 +75,7 @@ server.get('/api/v1/users', async (req, res) => {
     })
   res.json(responce)
 })
-// 1 zadanie na get zapros
 
-server.delete('/api/v1/users/:userId', async (req, res) => {
-  const response = await readFile(usersPath, 'utf-8')
-    .then(async (str) => {
-      const parsedString = JSON.parse(str)
-      const filteredUsers = parsedString.filter((user) => {
-        return +req.params.userId !== user.id
-      })
-      await writeNewFile(filteredUsers)
-      return { status: 'success', id: +req.params.userId }
-    })
-  res.json(response)
-})
-
-// 2 zadanie na delete faila
-server.delete('/api/v1/users', (req, res) => {
-  unlink(usersPath)
-    .then(() => {
-      res.json({ status: 'File deleted' })
-    })
-    .catch((err) => {
-      console.log('Error', err)
-      res.json({ status: 'No file' })
-    })
-})
-// 2 zadanie na delete faila
-
-// 3 zadanie na post
 server.post('/api/v1/users', async (req, res) => {
   const usersList = await readFile(usersPath, 'utf-8')
     .then(async (str) => {
@@ -119,7 +91,52 @@ server.post('/api/v1/users', async (req, res) => {
     })
   res.json(usersList)
 })
-// 3 zadanie na post
+
+server.patch('/api/v1/users/:userId', async (req, res) => {
+  const { userId } = req.params
+  const updatedUser = { ...req.body, id: userId }
+  const response = await readFile(usersPath, 'utf-8')
+    .then(async (str) => {
+      const parsedString = JSON.parse(str)
+      const mapUsers = parsedString.map((obj) => {
+        return obj.id === +userId ? { ...obj, ...updatedUser } : obj
+      })
+      await writeNewFile(mapUsers)
+      return { status: 'success', id: +userId }
+    })
+    .catch((err) => {
+      console.log(err)
+      return { status: 'No file exist', id: +userId }
+    })
+  res.json(response)
+})
+
+server.delete('/api/v1/users/:userId', async (req, res) => {
+  const response = await readFile(usersPath, 'utf-8')
+    .then(async (str) => {
+      const parsedString = JSON.parse(str)
+      const filteredUsers = parsedString.filter((user) => {
+        return +req.params.userId !== user.id
+      })
+      await writeNewFile(filteredUsers)
+      return { status: 'success', id: +req.params.userId }
+    })
+  res.json(response)
+})
+
+server.delete('/api/v1/users', (req, res) => {
+  unlink(usersPath)
+    .then(() => {
+      res.json({ status: 'File deleted' })
+    })
+    .catch((err) => {
+      console.log('Error', err)
+      res.json({ status: 'No file' })
+    })
+})
+
+
+
 
 // 4 zadanie na delete usera
 
@@ -139,29 +156,6 @@ server.post('/api/v1/users', async (req, res) => {
 //   res.json({ status: 'success', id: +userId })
 // })
 // 4 zadanie na delete usera
-
-// 5 zadanie na patch usera
-server.patch('/api/v1/users/:userId', async (req, res) => {
-  const { userId } = req.params
-  const updatedUser = { ...req.body, id: userId }
-  const response = await readFile(usersPath, 'utf-8')
-    .then(async (str) => {
-      const parsedString = JSON.parse(str)
-      const mapUsers = parsedString.map((obj) => {
-        return obj.id === +userId ? { ...obj, ...updatedUser } : obj
-      })
-      await writeNewFile(mapUsers)
-      return { status: 'success', id: +userId }
-    })
-    .catch((err) => {
-      console.log(err)
-      return { status: 'No file exist', id: +userId }
-    })
-  res.json(response)
-})
-// 5 zadanie na patch usera
-
-
 
 server.use('/api/', (req, res) => {
   res.status(404)
