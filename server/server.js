@@ -43,7 +43,6 @@ const middleware = [
 
 middleware.forEach((it) => server.use(it))
 
-// 1 zadanie na get zapros
 const globalUrl = 'https://jsonplaceholder.typicode.com/users'
 const usersPath = `${__dirname}/data/users.json`
 const getData = (url) => {
@@ -115,16 +114,16 @@ server.delete('/api/v1/users/:userId', async (req, res) => {
   const { userId } = req.params
   const response = await readFile(usersPath, 'utf-8')
     .then(async (str) => {
-     const parsedString = JSON.parse(str)
-     const filteredUsers = parsedString.filter((user) => {
-      return +userId !== +user.id
+      const parsedString = JSON.parse(str)
+      const filteredUsers = parsedString.filter((user) => {
+        return +userId !== +user.id
+      })
+      await writeNewFile(filteredUsers)
+      return { status: 'success', id: +userId }
     })
-    await writeNewFile(filteredUsers)
-    return { status: 'success', id: +userId }
-  })
-  .catch(() => {
-    return { status: 'No user', id: +userId }
-  })
+    .catch(() => {
+      return { status: 'No user', id: +userId }
+    })
   res.json(response)
 })
 
@@ -139,40 +138,10 @@ server.delete('/api/v1/users', (req, res) => {
     })
 })
 
-// 4 zadanie na delete usera
-
-// function write(fileName, obj) {
-//   return writeFile(fileName, JSON.stringify(obj), { encoding: 'utf-8' })
-// }
-// async function read(fileName) {
-//   const data = await readFile(fileName, { encoding: 'utf-8' })
-//   return data
-// }
-
-// server.delete('/api/v1/users/:userId', async (req, res) => {
-//   const { userId } = req.params
-//   const data = JSON.parse(await read(usersPath))
-//   write(usersPath, [...data.filter((it) => it.id !== +userId)])
-//   res.json({ status: 'success', id: +userId })
-// })
-// 4 zadanie na delete usera
-
 server.use('/api/', (req, res) => {
   res.status(404)
   res.end()
 })
-
-// server.get('/*', (req, res) => {
-//   const initialState = {
-//     location: req.url
-//   }
-//   return res.send(
-//     Html({
-//       body: '',
-//       initialState
-//     })
-//   )
-// })
 
 const [htmlStart, htmlEnd] = Html({
   body: 'separator',
