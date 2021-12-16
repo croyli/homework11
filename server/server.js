@@ -23,7 +23,7 @@ try {
 
 let connections = []
 
-const port = process.env.PORT || 232
+const port = process.env.PORT || 233
 const server = express()
 
 const setHeaders = (req, res, next) => {
@@ -162,17 +162,17 @@ server.use('/api/', (req, res) => {
   res.end()
 })
 
-server.get('/*', (req, res) => {
-  const initialState = {
-    location: req.url
-  }
-  return res.send(
-    Html({
-      body: '',
-      initialState
-    })
-  )
-})
+// server.get('/*', (req, res) => {
+//   const initialState = {
+//     location: req.url
+//   }
+//   return res.send(
+//     Html({
+//       body: '',
+//       initialState
+//     })
+//   )
+// })
 
 const [htmlStart, htmlEnd] = Html({
   body: 'separator',
