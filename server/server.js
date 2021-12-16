@@ -112,13 +112,17 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
 })
 
 server.delete('/api/v1/users/:userId', async (req, res) => {
-  const response = await readFile(usersPath, 'utf-8').then(async (str) => {
-    const parsedString = JSON.parse(str)
-    const filteredUsers = parsedString.filter((user) => {
+  const response = await readFile(usersPath, 'utf-8')
+    .then(async (str) => {
+     const parsedString = JSON.parse(str)
+     const filteredUsers = parsedString.filter((user) => {
       return +req.params.userId !== +user.id
     })
     await writeNewFile(filteredUsers)
     return { status: 'success', id: +req.params.userId }
+  })
+  .catch(() => {
+    return { status: 'No user', id: +req.params.userId }
   })
   res.json(response)
 })
