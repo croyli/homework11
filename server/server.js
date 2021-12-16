@@ -23,7 +23,7 @@ require('colors')
 
 let connections = []
 
-const port = process.env.PORT || 228
+const port = process.env.PORT || 229
 const server = express()
 
 const setHeaders = (req, res, next) => {
@@ -112,17 +112,18 @@ server.patch('/api/v1/users/:userId', async (req, res) => {
 })
 
 server.delete('/api/v1/users/:userId', async (req, res) => {
+  const { userId } = req.params
   const response = await readFile(usersPath, 'utf-8')
     .then(async (str) => {
      const parsedString = JSON.parse(str)
      const filteredUsers = parsedString.filter((user) => {
-      return +req.params.userId !== +user.id
+      return +userId !== +user.id
     })
     await writeNewFile(filteredUsers)
-    return { status: 'success', id: +req.params.userId }
+    return { status: 'success', id: +userId }
   })
   .catch(() => {
-    return { status: 'No user', id: +req.params.userId }
+    return { status: 'No user', id: +userId }
   })
   res.json(response)
 })
