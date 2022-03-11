@@ -23,7 +23,7 @@ try {
 
 let connections = []
 
-const port = process.env.PORT || 233
+const port = process.env.PORT || 2342
 const server = express()
 
 const setHeaders = (req, res, next) => {
