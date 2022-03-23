@@ -61,6 +61,25 @@ const writeNewFile = (finalArray) => {
   return writeFile(usersPath, JSON.stringify(finalArray), 'utf-8')
 }
 
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------------------------------------------------------------------------------
+//
+//
+//
+//
+//
+//
+// 11 nedelya
 server.get('/api/v1/users', async (req, res) => {
   const responce = await readFile(usersPath, 'utf-8')
     .then((usersData) => {
@@ -137,6 +156,7 @@ server.delete('/api/v1/users', (req, res) => {
       res.json({ status: 'No file' })
     })
 })
+// 11 nedelya
 
 server.use('/api/', (req, res) => {
   res.status(404)
