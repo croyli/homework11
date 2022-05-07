@@ -1,11 +1,8 @@
-import { combineReducers } from 'redux'
-import { connectRouter } from 'connected-react-router'
-import auth from './auth'
+import { createStore } from 'redux'
+import createRootReducer from './reducers'
 
-const createRootReducer = (history) =>
-  combineReducers({
-    router: connectRouter(history),
-    auth
-  })
+const initialState = {}
 
-export default createRootReducer
+const store = createStore(createRootReducer(), initialState)
+
+export default store
